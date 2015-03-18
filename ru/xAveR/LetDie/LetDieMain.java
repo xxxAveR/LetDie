@@ -7,14 +7,19 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class LetDieMain extends JavaPlugin{
+public class LetDieMain extends JavaPlugin implements Listener{
 
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {		
+		getServer().getPluginManager().registerEvents(this, this);
 		Runnable setThemOnFire = new Runnable() {
 			public void run() {
 				SetCreepersOnFire();
@@ -62,4 +67,17 @@ public class LetDieMain extends JavaPlugin{
 		}
 		return creepers;
 	} 
+	@EventHandler
+	public void EntityTarget(EntityTargetEvent e){
+		if(e.getTarget() instanceof Player){
+		Player p = (Player) e.getTarget();
+		if(p != null){
+		if(p.isSneaking()){
+			if(p.getLastDamage() == 0){
+			e.setCancelled(true);
+			}
+			}
+			}
+		}
+	}
 }
